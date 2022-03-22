@@ -19,6 +19,7 @@ import {
 } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
 
+import api from './src/services';
 import { toWords } from './src/utils';
 import currencies from './src/data/currencies';
 // import exchange from './src/exchange';
@@ -37,15 +38,16 @@ const App = () => {
   var [formattedInput, setFormattedInput] = useState();
   
   const fetchData = () => {
-    fetch('https://currencyapi.com/api/v2/latest?apikey=0bbbb6a0-8958-11ec-98c5-296619e599cd')
-      .then(response => response.json())
-      .then(data => {
-        if(data['data']) {
-          exchangeData = data['data'];
-          initCurrencyOptions();
-        }
-      })
-      .catch(error => console.log(error))
+    const url = 'https://currencyapi.com/api/v2/latest?apikey=0bbbb6a0-8958-11ec-98c5-296619e599cd';
+
+    api.get(url, (response) => {
+      if(response.success) {
+        exchangeData = response['data'];
+        initCurrencyOptions();
+      } else {
+        // Handle error scenario like hide loading indicator.
+      }
+    });
   }
 
   useEffect(() => {

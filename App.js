@@ -18,19 +18,10 @@ import {
   View,
 } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
-import { ToWords } from 'to-words';
+
+import { toWords } from './src/utils';
 import currencies from './src/data/currencies';
 // import exchange from './src/exchange';
-
-const toWords = new ToWords({
-  localeCode: 'en-US',
-  converterOptions: {
-    // currency: true,
-    ignoreDecimal: false,
-    // ignoreZeroCurrency: false,
-    // doNotAddOnly: false,
-  }
-});
 
 var exchangeData = null;
 
@@ -45,7 +36,7 @@ const App = () => {
   var [inputValue, setInputValue] = useState();
   var [formattedInput, setFormattedInput] = useState();
   
-  const fetchData = (inputAmount) => {
+  const fetchData = () => {
     fetch('https://currencyapi.com/api/v2/latest?apikey=0bbbb6a0-8958-11ec-98c5-296619e599cd')
       .then(response => response.json())
       .then(data => {
@@ -96,7 +87,8 @@ const App = () => {
       var exchangeRate = exchangeData[code];
       var converted = (+inputAmount * exchangeRate).toFixed(2);
       setConvertedAmount(addCommas(converted));
-      setOutputWords(toWords.convert(converted));
+      // setOutputWords(toWords.convert(converted));
+      setOutputWords(toWords(converted));
     }
   }
 
@@ -105,7 +97,8 @@ const App = () => {
       var v = removeNonNumeric(value);
       setInputValue(v);
       doConversion(v);
-      setInputWords(toWords.convert(v));
+      // setInputWords(toWords.convert(v));
+      setInputWords(toWords(v));
       setFormattedInput(addCommas(v));
     } else{
       setInputValue();
